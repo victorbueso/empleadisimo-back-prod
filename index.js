@@ -10,6 +10,7 @@ var transaccionesRouter = require('./routes/transacciones-router');
 var contratosRouter = require('./routes/contratos-router');
 var database = require('./modules/database');
 
+
 var app = express();
 var server = http.createServer(app);
 var io = require('socket.io')(server, {
@@ -17,10 +18,10 @@ var io = require('socket.io')(server, {
         origins: ['http://localhost:4200']
     }
 });
-
+/*
 //settings
 app.set('port', process.env.PORT || 3000);
-/*
+
 //establecer directorio público
 app.use(express.static('public'));
 
@@ -44,7 +45,6 @@ app.use('/publicaciones', publicacionesRouter);
 app.use('/transacciones', transaccionesRouter);
 app.use('/contratos', contratosRouter);
 app.use('/uploads', express.static(path.resolve('uploads')));
-app.use('/uploads', express.static(path.resolve('uploads')))
 module.exports = {
     io
 }
