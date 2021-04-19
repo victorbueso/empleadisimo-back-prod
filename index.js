@@ -20,7 +20,7 @@ var io = require('socket.io')(server, {
 
 //settings
 app.set('port', process.env.PORT || 3000);
-/*cv
+/*
 //establecer directorio público
 app.use(express.static('public'));
 
@@ -28,11 +28,11 @@ app.use(express.static('public'));
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public/index.html'));
 });
-
+*/
 server.listen(process.env.PORT || 3000, () => {
     console.log(`Example app listening on ${process.env.PORT || 3000} port!`);
 });
-*/
+
 //Middleware
 app.set('socketio', io);
 app.use(cors());
