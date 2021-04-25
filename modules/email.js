@@ -5,13 +5,13 @@ module.exports = info => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'empleadisimohn@gmail.com',
-            pass: 'Febrero+2021'
+            user: 'empleadisimoprueba@gmail.com',
+            pass: 'Febrero+2020'
         }
     });
 
     const mailOptions = {
-        from: `empleadisimohn@gmail.com`,
+        from: `empleadisimoprueba@gmail.com`,
         to: `${info.correo}`,
         subject: 'Verificación de correo electrónico: Empleadísimo',
         html: `
