@@ -14,6 +14,32 @@ const email = require('../modules/email');
 const chat = require('../models/chat');
 const { find } = require('../models/usuarios');
 
+//Router para crear un nuevo cv para usuario
+router.post('/:idUsuario/cv', function(req, res){
+    usuarios.updateOne(
+        {
+            _id: mongoose.Types.ObjectId(req.params.idUsuario),
+        }, 
+        {
+            $push: {
+                curriculum: {
+                    _id: mongoose.Types.ObjectId(),
+                    urlCv: req.body.urlCV
+                }
+            }
+        },
+        {upsert: true}
+    ).then( resp => {
+        res.send(resp);
+        res.end();
+    })
+    .catch( error => {
+        res.send(error);
+        res.end();
+    });
+});
+
+
 //Router para modificar el estado de las notificaciones
 router.put("/messageSeen/:idUser?", async (req, res)=> {
     if(!req.params.idUser){
@@ -305,15 +331,28 @@ var upload = multer({ storage: storage })
 
 // subir una foto de perfil 
 
-router.put('/profilePic/:idUser', upload.single('image'), async(req, res) => {
-    await usuario.updateOne({ _id: req.params.idUser }, { "fotoPerfil": req.file.path })
-        .then(result => {
-            res.status(200).json({ 'message': 'Foto de perfil actualizada con exito' });
-            res.end();
-        }).catch(error => {
-            res.send(error);
-            res.end();
-        });
+router.put('/profilePic/:idUser', (req, res) => {
+
+
+    usuarios.updateOne(
+        {
+            _id: mongoose.Types.ObjectId(req.params.idUser),
+        }, 
+        {
+            $set: { fotoPerfil: req.body.path }
+        },
+        {upsert: true}
+    ).then( resp => {
+        
+        res.send(resp);
+        res.end();
+    })
+    .catch( error => {
+        res.send(error);
+        res.end();
+    });
+
+
 });
 
 // borrar una foto de perfil 
