@@ -430,33 +430,24 @@ router.post('/CV/:idUser', upload.single('curriculums'), async(req, res) => {
 
 // borrar un cv en pdf
 
-router.post('/deleteCV/:idUser', async(req, res) => {
-    var fp = req.body.fp;
-    let arr = [];
+router.post('/deleteCV/:idUsuario', async(req, res) => {
 
-    usuario.findOne({ _id: req.params.idUser }, { curriculum: true }).
-    then(result2 => {
-        for (var i = 0; i < result2.curriculum.length; i++) {
-            arr[i] = result2.curriculum[i];
+    await usuario.updateOne(
+        { 
+            _id: mongoose.Types.ObjectId(req.params.idUsuario) 
+        }, 
+        { 
+            $pull: { curriculum: { _id: mongoose.Types.ObjectId(req.body.idUrl) } } 
         }
-
-        const df = arr.findIndex( x => x.rutaArchivo === fp)
-        fs.unlink(path.resolve(arr[df].rutaArchivo))
-        arr.splice(df,1);
-        
-
-        usuario.updateOne({ _id: req.params.idUser }, { "curriculum": arr }).then().catch(error => {
-            res.send(error);
-            res.end()
-        });
-        res.status(200).json({ 'message': 'Curriculums removido' });
+    ).then(result => {
+        res.status(200).json({ 'message': 'Curriculum eliminado' });
         res.end();
-    }).catch(error2 => {
-        res.send(error2);
-        res.end();
-    })
+    }).catch(error => {
+        res.send(error);
+        res.end()
+    });
 
-})
+});
 
 //actualizar un cv en pdf
 
@@ -512,32 +503,20 @@ router.put('/updateCV/:idUser', upload.single('curriculums'), async(req, res) =>
             res.send(error2);
             res.end();
         })
-
-})
+});
 
 
 // obtener las rutas de los cv del empleado
-
 router.get('/CVinfo/:idUser', async(req, res) => {
     usuario.find({ _id: req.params.idUser }, { curriculum: 1 }).
     then(result => {
-        const arr = []
-        for (var i = 0; i < result.length; i++) {
-            arr[i] = result[i].curriculum;
-        }
-
-        const arr1 = []
-        for (var i = 0; i < arr[0].length; i++) {
-            arr1[i] = arr[0][i].rutaArchivo;
-        }
-        return res.json(arr1);
+        res.send(result[0].curriculum);
         res.end();
     }).catch(error => {
         res.send(error);
         res.end();
     })
-
-})
+});
 
 router.get('/profilePic/:idUser', function(req, res) {
     usuario.findById(req.params.idUser, { fotoPerfil: 1 })
