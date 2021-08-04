@@ -429,7 +429,6 @@ router.post('/CV/:idUser', upload.single('curriculums'), async(req, res) => {
 });
 
 // borrar un cv en pdf
-
 router.post('/deleteCV/:idUsuario', async(req, res) => {
 
     await usuario.updateOne(
@@ -449,8 +448,33 @@ router.post('/deleteCV/:idUsuario', async(req, res) => {
 
 });
 
-//actualizar un cv en pdf
 
+// borrar un cv en pdf
+
+router.post('/:idUrl/updateCV/:idUsuario', async(req, res) => {
+
+    await usuario.updateOne(
+        { 
+            _id: mongoose.Types.ObjectId(req.params.idUsuario),
+            "curriculum._id": mongoose.Types.ObjectId(req.params.idUrl)
+        }, 
+        { 
+            $set: { 
+                "curriculum.$.urlCv":  req.body.urlCv  
+            } 
+        },
+    ).then(result => {
+        res.status(200).json({ 'message': 'Curriculum actualizado' });
+        res.end();
+    }).catch(error => {
+        res.send(error);
+        res.end()
+    });
+
+});
+
+
+//actualizar un cv en pdf
 router.put('/updateCV/:idUser', upload.single('curriculums'), async(req, res) => {
     var fp1 = req.body.fp1;
     const arr = []
